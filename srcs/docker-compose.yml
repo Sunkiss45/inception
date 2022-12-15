@@ -1,0 +1,138 @@
+# Définition de la version utilisée, v3 la plus courante
+version: '3'
+
+services:
+
+# Configuration du Container *pas ft* MariaDB
+  mariadb:
+# Nom du Container
+    container_name: mariadb
+
+# Déclaration des fichiers utilitaires du Container
+    build: ./requirements/mariadb/
+
+# Déclaration des MACRO environnementales utilisées
+    env_file:
+      - .env
+
+# Déclaration du Volume de sauvegarde
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+# Déclaration du network utilisé par le Container
+    networks:
+      - my_network
+
+# Instruction de redemarrage
+# - unless-stopped : ne redémarrera pas si le stop viens de nous
+    restart: unless-stopped
+
+# Configuration du Container *pas ft* WordPress
+  wordpress:
+# Nom du Container
+    container_name: wordpress
+
+# Dépendance du Container
+    depends_on:
+      - mariadb
+
+# Déclaration des fichiers utilitaires du Container
+    build: ./requirements/wordpress/
+
+# Déclaration des MACRO environnementales utilisées
+    env_file:
+      - .env
+
+# Déclaration du Volume de sauvegarde
+    volumes:
+      - wordpress_data:/var/www/html/wordpress
+
+# Déclaration du network utilisé par le Container
+    networks:
+      - my_network
+
+# Instruction de redemarrage
+# - unless-stopped : ne redémarrera pas si le stop viens de nous
+    restart: unless-stopped
+
+# Configuration du Container *pas ft* Nginx
+  nginx:
+# Nom du Container
+    container_name: nginx
+
+# Dépendance du Container
+    depends_on:
+      - wordpress
+
+# Déclaration des fichiers utilitaires du Container
+    build: ./requirements/nginx/
+
+# Déclaration du Volume de sauvegarde
+    volumes:
+      - wordpress_data:/var/www/html/wordpress
+
+# Déclaration du network utilisé par le Container
+    networks:
+      - my_network
+
+# Déclaration du port de communication avec Internet
+    ports:
+      - "443:443"
+
+# Instruction de redemarrage
+# - unless-stopped : ne redémarrera pas si le stop viens de nous
+    restart: unless-stopped
+
+networks:
+
+# Configuration de notre Network
+  my_network:
+
+# Network bridge : Preformaté -> DNS auto / Variable environnemt partagé au sein du réseau
+#   - Better isolation :  les containers ne sont pas rattachés au default network,
+#                         et ne peuvent donc communiquer avec des réseaux autres
+# Network front/back : non-formater, 1 container de com' (front), le reste en "offline" (back)
+    driver: bridge
+
+
+volumes:
+
+# Configuration du Volume de sauvegarde WordPress
+  wordpress_data:
+
+# Sauvegarde de manière local
+    driver: local
+
+# Options du driver
+    driver_opts:
+
+# Emplacement du Volume de sauvegarde
+      device: /home/ebarguil/data/wordpress
+
+# Définition du type de Volume, utilisé dans les fichiers de système virtuel
+# - none : Aucune liaison de partition virtuelle (driver:local n'a pas de partition associée)
+      type: none
+
+# Options de montage
+# - bind : Préparation de liaison pour "wordpress_data"
+      o: bind
+
+# Configuration du Volume de sauvegarde MariaDB
+  mariadb_data:
+
+# Sauvegarde de manière local
+    driver: local
+
+# Options du driver
+    driver_opts:
+
+# Emplacement du Volume de sauvegarde
+      device: /home/ebarguil/data/mariadb
+
+# Définition du type de Volume, utilisé dans les fichiers de système virtuel
+# - none : Aucune liaison de partition virtuelle (driver:local n'a pas de partition associée)
+      type: none
+
+# Options de montage
+# - bind : Préparation de liaison pour "mariadb_data"
+      o: bind

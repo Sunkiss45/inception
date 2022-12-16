@@ -8,6 +8,9 @@ services:
 # Nom du Container
     container_name: mariadb
 
+# Nom de l'image générée par docker-compose
+    image: mariadb
+
 # Déclaration des fichiers utilitaires du Container
     build: ./requirements/mariadb/
 
@@ -31,6 +34,9 @@ services:
   wordpress:
 # Nom du Container
     container_name: wordpress
+
+# Nom de l'image générée par docker-compose
+    image: wordpress
 
 # Dépendance du Container
     depends_on:
@@ -59,6 +65,9 @@ services:
   nginx:
 # Nom du Container
     container_name: nginx
+
+# Nom de l'image générée par docker-compose
+    image: nginx
 
 # Dépendance du Container
     depends_on:

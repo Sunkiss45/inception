@@ -6,7 +6,7 @@
 #    By: ebarguil <ebarguil@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 17:02:13 by ebarguil          #+#    #+#              #
-#    Updated: 2022/12/16 16:39:50 by ebarguil         ###   ########.fr        #
+#    Updated: 2022/12/16 17:47:18 by ebarguil         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,10 +21,10 @@
 #		* --no-cache : empêche l'utilisation des cache pour build une image (plus de propreter x plus long)
 #	* up : construit si non-existant, et lance les services
 #		* -d : "detached" force le processus en background (en second plan)
-#	* stop / start / restart : arret / démarage / redémarage des SERVICES
-#		-> NE TOUCHE PAS AU IMAGES CONSTRUITES
-#	* down : supprimme l'ensemble de l'images des services
-#		-> NE SUPPRIME PAS LES CACHES
+#	* stop / start / restart : arret / démarage / redémarage des CONTAINERS
+#		-> NE SUPPRIME PAS LES IMAGES CONSTRUITES NI LES CACHES
+#	* down : supprimme l'ensemble des containers
+#		-> NE SUPPRIME PAS LES IMAGES CONSTRUITES NI LES CACHES
 #	* exec : executera le services avec son ENTRYPOINT
 #		-> ENTRYPOINT :	Commande exécutée uniquement lors d'un demarage isolé du Container
 # docker : commande basique pour docker
